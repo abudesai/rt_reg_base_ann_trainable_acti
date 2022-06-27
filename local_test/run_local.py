@@ -36,7 +36,7 @@ this script is useful for doing the algorithm testing locally without needing
 to build the docker image and run the container.
 make sure you create your virtual environment, install the dependencies
 from requirements.txt file, and then use that virtual env to do your testing. 
-This isnt foolproof. You can still have host os-related issues, so beware. 
+This isnt foolproof. You can still have host os or python-version related issues. 
 '''
 
 
