@@ -40,11 +40,11 @@ This isnt foolproof. You can still have host os-related issues, so beware.
 '''
 
 
-# dataset_name = "abalone"; id_col = "Id"; target_col = "Rings";
+dataset_name = "abalone"; id_col = "Id"; target_col = "Rings";
 # dataset_name = "auto_prices"; id_col = "id"; target_col = "price";
 # dataset_name = "computer_activity"; id_col = "id"; target_col = "usr";
 # dataset_name = "heart_disease"; id_col = "Id"; target_col = "num";
-dataset_name = "white_wine"; id_col = "id"; target_col = "quality";
+# dataset_name = "white_wine"; id_col = "id"; target_col = "quality";
 
 
 def create_ml_vol():    
