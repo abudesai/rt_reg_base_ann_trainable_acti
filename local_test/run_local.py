@@ -116,11 +116,11 @@ def train_and_save_algo():
     # get trained preprocessor, model, training history 
     preprocessor, model, history = model_trainer.get_trained_model(train_data, data_schema, hyper_parameters)            
     # Save the processing pipeline   
-    pipeline.save_preprocessor(preprocessor, model_path)
+    pipeline.save_preprocessor(preprocessor, model_artifacts_path)
     # Save the model 
-    ann.save_model(model, model_path)
+    ann.save_model(model, model_artifacts_path)
     # Save training history
-    ann.save_training_history(history, model_path)    
+    ann.save_training_history(history, model_artifacts_path)    
     print("done with training")
 
 
@@ -130,7 +130,7 @@ def load_and_test_algo():
     # read data config
     data_schema = utils.get_data_schema(data_schema_path)    
     # instantiate the trained model 
-    predictor = model_server.ModelServer(model_path)
+    predictor = model_server.ModelServer(model_artifacts_path)
     # make predictions
     predictions = predictor.predict(test_data, data_schema)
     # save predictions
@@ -149,9 +149,9 @@ def score(test_data, predictions):
 
 
 if __name__ == "__main__": 
-    create_ml_vol()   # create the directory which imitates the bind mount on container
-    copy_example_files()   # copy the required files for model training    
-    run_HPT()               # run HPT and save tuned hyperparameters
-    train_and_save_algo()        # train the model and save
+    # create_ml_vol()   # create the directory which imitates the bind mount on container
+    # copy_example_files()   # copy the required files for model training    
+    # run_HPT()               # run HPT and save tuned hyperparameters
+    # train_and_save_algo()        # train the model and save
     load_and_test_algo()        # load the trained model and get predictions on test data
      
