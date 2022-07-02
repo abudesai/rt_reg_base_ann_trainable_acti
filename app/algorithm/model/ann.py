@@ -35,7 +35,7 @@ class InfCostStopCallback(Callback):
 
 def get_init_values(shape): 
     dim = np.prod(shape)
-    vals = np.random.randn(dim)
+    vals = np.random.randn(dim) / np.sqrt(dim)
     return vals.reshape(shape)
 
 
@@ -139,7 +139,7 @@ class ANN():
         output_ = Dense(1, activity_regularizer=reg )(x)
 
         model = Model(input_, output_)
-        # model.summary() 
+        # model.summary() ; sys.exit()
         return model
     
     

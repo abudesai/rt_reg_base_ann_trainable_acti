@@ -41,7 +41,7 @@ def get_trained_model(data, data_schema, hyper_params):
         valid_X, valid_y = valid_data['X'].astype(np.float), valid_data['y'].astype(np.float)       
     else: 
         valid_X, valid_y = None, None 
-        
+                
     # Create and train model     
     print('Fitting model ...')  
     model, history = train_model(train_X, train_y, valid_X, valid_y, hyper_params)    
@@ -64,6 +64,7 @@ def train_model(train_X, train_y, valid_X, valid_y, hyper_params):
         epochs = 1000,
         verbose = 0, 
     )  
+    
     print("last_loss:", history.history['loss'][-1])
     return model, history
 

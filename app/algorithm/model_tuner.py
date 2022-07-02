@@ -119,7 +119,7 @@ def tune_hyperparameters(data, data_schema, num_trials, hyper_param_path, hpt_re
         # evaluate the model
         score = model.evaluate(valid_X, valid_y)
         # Our optimizing metric is the model loss fn
-        opt_metric = score[0]   
+        opt_metric = score[0]   # returns mse
         if np.isnan(opt_metric): opt_metric = 1.0e5     # sometimes loss becomes inf, so use a large value
         # create a unique model name for the trial - we add loss into file name 
         # so we can later sort by file names, and get the best score file without reading each file

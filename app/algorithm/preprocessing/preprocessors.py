@@ -224,7 +224,7 @@ class MinMaxBounder(BaseEstimator, TransformerMixin):
         
         df = pd.DataFrame(bounded_data, columns=self.cols_list)
         final_data = pd.concat([other_data, df], ignore_index=True, axis=1)
-        final_data.columns = other_cols + self.cols_list        
+        final_data.columns = other_cols + self.cols_list 
         
         return final_data
     
@@ -253,6 +253,23 @@ class TargetFeatureAdder(BaseEstimator, TransformerMixin):
             data[self.label_field_name] = 0.
         return data
 
+
+class ValueClipper(BaseEstimator, TransformerMixin): 
+    def __init__(self, fields_to_clip, min_val, max_val) -> None:
+        super().__init__()
+        self.fields_to_clip = fields_to_clip
+        self.min_val = min_val
+        self.max_val = max_val
+    
+    def fit(self, data): return self
+    
+    def transform(self, data): 
+        for field in self.fields_to_clip:
+            if self.min_val is not None: 
+                data[field] = data[field].clip(lower=self.min_val)
+            if self.max_val is not None: 
+                data[field] = data[field].clip(upper=self.max_val)
+        return data
 
 
 class XYSplitter(BaseEstimator, TransformerMixin): 
