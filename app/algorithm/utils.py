@@ -1,6 +1,7 @@
 
 import numpy as np, pandas as pd, random
 import sys, os
+import pprint
 import json
 import tensorflow as tf
 
@@ -65,6 +66,7 @@ def save_json(file_path_and_name, data):
     with open(file_path_and_name, 'w') as f:
         json.dump( data,  f, 
                   default=lambda o: make_serializable(o), 
+                #   default=lambda o: o.__dict__, 
                   sort_keys=True, 
                   indent=4, 
                   separators=(',', ': ') 

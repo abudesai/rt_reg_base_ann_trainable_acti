@@ -74,8 +74,8 @@ class EarlyStoppingAtMinLoss(Callback):
             if self.wait >= self.patience and epoch >= self.min_epochs:
                 self.stopped_epoch = epoch
                 self.model.stop_training = True
-                print("Restoring model weights from the end of the best epoch.")
-                self.model.set_weights(self.best_weights)
+                # print("Restoring model weights from the end of the best epoch.")
+                # self.model.set_weights(self.best_weights)
 
     def on_train_end(self, logs=None):
         if self.stopped_epoch > 0:

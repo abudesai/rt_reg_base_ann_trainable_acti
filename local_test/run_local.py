@@ -3,7 +3,6 @@ import time
 import sys
 import pandas as pd,numpy as np
 import pprint
-from skopt.space import Real, Categorical, Integer
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 sys.path.insert(0, './../app')
@@ -28,7 +27,7 @@ hyper_param_path = os.path.join(model_path, "model_config")
 model_artifacts_path = os.path.join(model_path, "artifacts")
 
 output_path = "./ml_vol/outputs"
-hpt_results_path = os.path.join(output_path, "hpt_results")
+hpt_outputs_path = os.path.join(output_path, "hpt_outputs")
 testing_outputs_path = os.path.join(output_path, "testing_outputs")
 errors_path = os.path.join(output_path, "errors")
 
@@ -98,7 +97,7 @@ def run_HPT(num_hpt_trials):
     # read data config
     data_schema = utils.get_data_schema(data_schema_path)  
     # run hyper-parameter tuning. This saves results in each trial, so nothing is returned
-    model_tuner.tune_hyperparameters(train_data, data_schema, num_hpt_trials, hyper_param_path, hpt_results_path)
+    model_tuner.tune_hyperparameters(train_data, data_schema, num_hpt_trials, hyper_param_path, hpt_outputs_path)
 
 
 def train_and_save_algo():        
@@ -111,11 +110,11 @@ def train_and_save_algo():
     # get trained preprocessor, model, training history 
     preprocessor, model, history = model_trainer.get_trained_model(train_data, data_schema, hyper_parameters)            
     # Save the processing pipeline   
-    pipeline.save_preprocessor(preprocessor, model_path)
+    pipeline.save_preprocessor(preprocessor, model_artifacts_path)
     # Save the model 
-    ann.save_model(model, model_path)
+    ann.save_model(model, model_artifacts_path)
     # Save training history
-    ann.save_training_history(history, model_path)    
+    ann.save_training_history(history, model_artifacts_path)    
     print("done with training")
 
 
@@ -125,7 +124,7 @@ def load_and_test_algo():
     # read data config
     data_schema = utils.get_data_schema(data_schema_path)    
     # instantiate the trained model 
-    predictor = model_server.ModelServer(model_path)
+    predictor = model_server.ModelServer(model_artifacts_path)
     # make predictions
     predictions = predictor.predict(test_data, data_schema)
     # save predictions
@@ -192,17 +191,17 @@ def run_train_and_test(dataset_name, run_hpt, num_hpt_trials):
                "num_hpt_trials": num_hpt_trials if run_hpt else None, 
                "elapsed_time_in_minutes": elapsed_time_in_minutes 
                }
-    
+    pprint.pprint(results)
     return results
     
     
 
 if __name__ == "__main__": 
 
-    run_hpt = False
-    num_hpt_trials = 20    
+    run_hpt = True
+    num_hpt_trials = 10  
     
-    # datasets = ["ailerons"]
+    # datasets = ["abalone"]
     datasets = ["abalone", "auto_prices", "computer_activity", "heart_disease", "white_wine", "ailerons"]
      
     all_results = []
