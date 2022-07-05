@@ -1,0 +1,7 @@
+model,dataset_name,run_hpt,num_hpt_trials,rmse,r2,elapsed_time_in_minutes
+ANN_Trainable_Acti,abalone,False,,1.9265,0.4819,0.49
+ANN_Trainable_Acti,auto_prices,False,,2458.3444,0.9093,0.08
+ANN_Trainable_Acti,computer_activity,False,,6.6874,0.7905,0.51
+ANN_Trainable_Acti,heart_disease,False,,0.739,0.5839,0.05
+ANN_Trainable_Acti,white_wine,False,,0.825,0.2084,0.27
+ANN_Trainable_Acti,ailerons,False,,0.0002,0.8099,0.66

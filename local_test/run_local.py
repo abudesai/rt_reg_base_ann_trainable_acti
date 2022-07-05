@@ -31,6 +31,9 @@ hpt_outputs_path = os.path.join(output_path, "hpt_outputs")
 testing_outputs_path = os.path.join(output_path, "testing_outputs")
 errors_path = os.path.join(output_path, "errors")
 
+test_results_path = "test_results"
+if not os.path.exists(test_results_path): os.mkdir(test_results_path)
+
 '''
 this script is useful for doing the algorithm testing locally without needing 
 to build the docker image and run the container.
@@ -160,14 +163,20 @@ def score(test_data, predictions):
     return results
 
 
-def save_test_outputs(results, run_hpt):
-    fname = f"{model_name}_results_with_hpt.csv" if run_hpt else f"{model_name}_results_no_hpt.csv"
-    df = pd.DataFrame(results)
-    df = df[["model", "dataset_name", "run_hpt", "num_hpt_trials", "rmse", "r2", "elapsed_time_in_minutes"]]
-    print(df)
-    test_results_path = "test_results"
-    if not os.path.exists(test_results_path): os.mkdir(test_results_path)
-    df.to_csv(os.path.join(test_results_path, fname), index=False)
+def save_test_outputs(results, run_hpt, dataset_name):    
+    df = pd.DataFrame(results) if dataset_name is None else pd.DataFrame([results])        
+    df = df[["model", "dataset_name", "run_hpt", "num_hpt_trials", "rmse", "r2", "elapsed_time_in_minutes"]]    
+    file_path_and_name = get_file_path_and_name(run_hpt, dataset_name)
+    df.to_csv(file_path_and_name, index=False)
+
+
+def get_file_path_and_name(run_hpt, dataset_name): 
+    if dataset_name is None: 
+        fname = f"_{model_name}_results_with_hpt.csv" if run_hpt else f"_{model_name}_results_no_hpt.csv"
+    else: 
+        fname = f"{model_name}_{dataset_name}_results_with_hpt.csv" if run_hpt else f"{model_name}_{dataset_name}_results_no_hpt.csv"
+    full_path = os.path.join(test_results_path, fname)
+    return full_path
 
 
 def run_train_and_test(dataset_name, run_hpt, num_hpt_trials):
@@ -191,25 +200,28 @@ def run_train_and_test(dataset_name, run_hpt, num_hpt_trials):
                "num_hpt_trials": num_hpt_trials if run_hpt else None, 
                "elapsed_time_in_minutes": elapsed_time_in_minutes 
                }
-    pprint.pprint(results)
+    print(f"Done with dataset in {elapsed_time_in_minutes} minutes.")
     return results
     
     
 
 if __name__ == "__main__": 
 
-    run_hpt = True
-    num_hpt_trials = 10  
+    num_hpt_trials = 10
+    run_hpt_list = [False, True]
+    # run_hpt_list = [False]
     
-    # datasets = ["abalone"]
     datasets = ["abalone", "auto_prices", "computer_activity", "heart_disease", "white_wine", "ailerons"]
-     
-    all_results = []
-    for dataset_name in datasets:        
-        print("-"*60)
-        print(f"Running dataset {dataset_name}")
-        results = run_train_and_test(dataset_name, run_hpt, num_hpt_trials)
-        all_results.append(results)
-        print("-"*60)
+    # datasets = ["heart_disease"]
     
-    save_test_outputs(all_results, run_hpt)
+    for run_hpt in run_hpt_list:
+        all_results = []
+        for dataset_name in datasets:        
+            print("-"*60)
+            print(f"Running dataset {dataset_name}")
+            results = run_train_and_test(dataset_name, run_hpt, num_hpt_trials)
+            save_test_outputs(results, run_hpt, dataset_name)            
+            all_results.append(results)
+            print("-"*60)
+        
+        save_test_outputs(all_results, run_hpt, dataset_name=None)
