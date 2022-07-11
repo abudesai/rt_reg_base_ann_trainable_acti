@@ -111,7 +111,6 @@ class TrainableActivationLayer(Layer):
 
 class ANN():     
     def __init__(self, D, l1_reg=1e-3, l2_reg=1e-3, lr = 1e-2, num_cps=3, **kwargs) -> None:
-        super(ANN, self).__init__(**kwargs)
         self.D = D
         self.l1_reg = np.float(l1_reg)
         self.l2_reg = np.float(l2_reg)
